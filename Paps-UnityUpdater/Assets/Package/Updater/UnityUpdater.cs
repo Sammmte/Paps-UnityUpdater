@@ -12,7 +12,7 @@ namespace Paps.UnityUpdater
         private List<ILateUpdateListener> lateUpdateListeners = new List<ILateUpdateListener>();
         private List<IFixedUpdateListener> fixedUpdateListeners = new List<IFixedUpdateListener>();
 
-        public bool IsEnabled { get; private set; }
+        public bool IsEnabled { get; private set; } = true;
 
         public void Disable()
         {
@@ -41,6 +41,9 @@ namespace Paps.UnityUpdater
 
         public void SubscribeToUpdate(IUpdateListener listener)
         {
+            if (IsSubscribedToUpdate(listener)) 
+                return;
+
             updateListeners.Add(listener);
         }
 
@@ -57,6 +60,9 @@ namespace Paps.UnityUpdater
 
         public void SubscribeToLateUpdate(ILateUpdateListener listener)
         {
+            if (IsSubscribedToLateUpdate(listener))
+                return;
+
             lateUpdateListeners.Add(listener);
         }
 
@@ -73,6 +79,9 @@ namespace Paps.UnityUpdater
 
         public void SubscribeToFixedUpdate(IFixedUpdateListener listener)
         {
+            if (IsSubscribedToFixedUpdate(listener))
+                return;
+
             fixedUpdateListeners.Add(listener);
         }
 
@@ -123,4 +132,5 @@ namespace Paps.UnityUpdater
             fixedUpdateListenersCurrentIndex = 0;
         }
     }
+
 }
