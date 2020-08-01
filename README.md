@@ -23,7 +23,7 @@ openupm add net.tnrd.nsubstitute
 ### Quick Setup
 
 ```csharp
-void SomeMethod
+void SomeMethod()
 {
     var unityUpdater = new UnityUpdater();
 
@@ -68,11 +68,13 @@ class MyFixedUpdatableClass : IFixedUpdateListener
 Want to do weird stuff? Execute any type of update methods whenever you want.
 
 ```csharp
-class MyCustomUpdaterMonobehaviour : Monobehaviour
+class MyCustomUpdaterMonoBehaviour : MonoBehaviour
 {
+    UnityUpdater unityUpdater;
+
     void Awake()
     {
-        var unityUpdater = new UnityUpdater();
+        unityUpdater = new UnityUpdater();
     
         unityUpdater.SubscribeToUpdate(new MyUpdatableClass());
         unityUpdater.SubscribeToLateUpdate(new MyLateUpdatableClass());
