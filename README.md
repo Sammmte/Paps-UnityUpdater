@@ -9,13 +9,9 @@ Paps Unity Updater is a central point for Update, LateUpdate and FixedUpdate met
 Performance, mostly. Also you can add Non-Monobehaviour objects to the updater.
 
 ## How to install it
-1. The package is available on the [openupm registry](https://openupm.com). You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
+1. The package is available on the [openupm registry](https://openupm.com/packages/paps.unity-updater/).
 ```
 openupm add paps.unity-updater
-```
-2. You can also install via git url by adding these entries in your **manifest.json**
-```json
-"paps.unity-updater": "https://github.com/Sammmte/Paps-UnityUpdater"
 ```
 
 ## How to use it
