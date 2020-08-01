@@ -11,11 +11,11 @@ Performance, mostly. Also you can add Non-Monobehaviour objects to the updater.
 ## How to install it
 1. The package is available on the [openupm registry](https://openupm.com). You can install it via [openupm-cli](https://github.com/openupm/openupm-cli).
 ```
-openupm add net.tnrd.nsubstitute
+openupm add paps.unity-updater
 ```
 2. You can also install via git url by adding these entries in your **manifest.json**
 ```json
-"net.tnrd.nsubstitute": "https://github.com/Thundernerd/Unity3D-NSubstitute.git"
+"paps.unity-updater": "https://github.com/Sammmte/Paps-UnityUpdater"
 ```
 
 ## How to use it
