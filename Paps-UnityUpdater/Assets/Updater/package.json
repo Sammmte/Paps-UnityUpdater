@@ -4,7 +4,7 @@
   "displayName": "Paps Unity Updater",
   "unity": "2019.2",
   "description": "UnityUpdater is a way to optimize unity's update methods, using a unique central update method",
-  "license": "WTFPL",
+  "license": "Unlicense",
   "keywords": [
     "c#",
     "unity updater",
