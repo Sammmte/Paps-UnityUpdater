@@ -52,5 +52,47 @@ namespace Tests
             //Then
             Assert.That(unityUpdater.IsSubscribedToFixedUpdate(listener), "Contains added listener");
         }
+
+        [Test]
+        public void Remove_Update_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IUpdateListener>();
+            unityUpdater.SubscribeToUpdate(listener);
+
+            //When
+            unityUpdater.UnsubscribeFromUpdate(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsSubscribedToUpdate(listener) == false, "Does not contains removed listener");
+        }
+
+        [Test]
+        public void Remove_LateUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<ILateUpdateListener>();
+            unityUpdater.SubscribeToLateUpdate(listener);
+
+            //When
+            unityUpdater.UnsubscribeFromLateUpdate(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsSubscribedToLateUpdate(listener) == false, "Does not contains removed listener");
+        }
+
+        [Test]
+        public void Remove_FixedUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IFixedUpdateListener>();
+            unityUpdater.SubscribeToFixedUpdate(listener);
+
+            //When
+            unityUpdater.UnsubscribeFromFixedUpdate(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsSubscribedToFixedUpdate(listener) == false, "Does not contains removed listener");
+        }
     }
 }
