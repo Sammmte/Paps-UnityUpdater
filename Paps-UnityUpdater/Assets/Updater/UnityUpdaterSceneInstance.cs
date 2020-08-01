@@ -2,7 +2,7 @@
 
 namespace Paps.UnityUpdater
 {
-    internal class UnityUpdaterSceneInstance : MonoBehaviour
+    public class UnityUpdaterSceneInstance : MonoBehaviour
     {
         private IUnityUpdater unityUpdater;
 

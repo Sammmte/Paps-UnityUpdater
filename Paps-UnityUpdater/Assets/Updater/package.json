@@ -1,6 +1,6 @@
 {
   "name": "paps.unity-updater",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "displayName": "Paps Unity Updater",
   "unity": "2019.2",
   "description": "UnityUpdater is a way to optimize unity's update methods, using a unique central update method",
@@ -9,7 +9,7 @@
     "c#",
     "unity updater",
     "paps",
-    "unity",
+    "unity"
   ],
   "author": {
     "name": "Santiago Perez"
