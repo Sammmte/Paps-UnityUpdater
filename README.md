@@ -119,3 +119,7 @@ class MyFixedUpdatableClass : IFixedUpdateListener
     }
 }
 ```
+
+## License
+
+[MIT License](https://github.com/Sammmte/Paps-UnityUpdater/blob/master/Paps-UnityUpdater/Assets/Updater/LICENSE.md)
