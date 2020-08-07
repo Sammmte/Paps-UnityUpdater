@@ -8,9 +8,9 @@ namespace Paps.UnityUpdater
         private int lateUpdateListenersCurrentIndex = 0;
         private int fixedUpdateListenersCurrentIndex = 0;
 
-        private List<IUpdateListener> updateListeners = new List<IUpdateListener>();
-        private List<ILateUpdateListener> lateUpdateListeners = new List<ILateUpdateListener>();
-        private List<IFixedUpdateListener> fixedUpdateListeners = new List<IFixedUpdateListener>();
+        private List<UpdateListener> updateListeners = new List<UpdateListener>();
+        private List<LateUpdateListener> lateUpdateListeners = new List<LateUpdateListener>();
+        private List<FixedUpdateListener> fixedUpdateListeners = new List<FixedUpdateListener>();
 
         public bool IsEnabled { get; private set; } = true;
 
@@ -24,19 +24,49 @@ namespace Paps.UnityUpdater
             IsEnabled = true;
         }
 
+        private UpdateListener Find(IUpdateListener listener)
+        {
+            return updateListeners.Find(element => element.Listener == listener);
+        }
+
+        private LateUpdateListener Find(ILateUpdateListener listener)
+        {
+            return lateUpdateListeners.Find(element => element.Listener == listener);
+        }
+
+        private FixedUpdateListener Find(IFixedUpdateListener listener)
+        {
+            return fixedUpdateListeners.Find(element => element.Listener == listener);
+        }
+
+        private bool ContainsListener(IUpdateListener listener)
+        {
+            return Find(listener) != null;
+        }
+
+        private bool ContainsListener(ILateUpdateListener listener)
+        {
+            return Find(listener) != null;
+        }
+
+        private bool ContainsListener(IFixedUpdateListener listener)
+        {
+            return Find(listener) != null;
+        }
+
         public bool IsSubscribedToUpdate(IUpdateListener listener)
         {
-            return updateListeners.Contains(listener);
+            return ContainsListener(listener);
         }
 
         public bool IsSubscribedToLateUpdate(ILateUpdateListener listener)
         {
-            return lateUpdateListeners.Contains(listener);
+            return ContainsListener(listener);
         }
 
         public bool IsSubscribedToFixedUpdate(IFixedUpdateListener listener)
         {
-            return fixedUpdateListeners.Contains(listener);
+            return ContainsListener(listener);
         }
 
         public void SubscribeToUpdate(IUpdateListener listener)
@@ -44,18 +74,24 @@ namespace Paps.UnityUpdater
             if (IsSubscribedToUpdate(listener)) 
                 return;
 
-            updateListeners.Add(listener);
+            updateListeners.Add(new UpdateListener(listener, true));
         }
 
         public void UnsubscribeFromUpdate(IUpdateListener listener)
         {
-            int indexOfListener = updateListeners.IndexOf(listener);
-
-            if (updateListeners.Remove(listener))
+            if(ContainsListener(listener))
             {
+                var listenerElement = Find(listener);
+
+                int indexOfListener = updateListeners.IndexOf(listenerElement);
+
+                updateListeners.Remove(listenerElement);
+
                 if (indexOfListener <= updateListenersCurrentIndex && updateListenersCurrentIndex > 0)
                     updateListenersCurrentIndex--;
             }
+
+            
         }
 
         public void SubscribeToLateUpdate(ILateUpdateListener listener)
@@ -63,15 +99,19 @@ namespace Paps.UnityUpdater
             if (IsSubscribedToLateUpdate(listener))
                 return;
 
-            lateUpdateListeners.Add(listener);
+            lateUpdateListeners.Add(new LateUpdateListener(listener, true));
         }
 
         public void UnsubscribeFromLateUpdate(ILateUpdateListener listener)
         {
-            int indexOfListener = lateUpdateListeners.IndexOf(listener);
-
-            if (lateUpdateListeners.Remove(listener))
+            if(ContainsListener(listener))
             {
+                var listenerElement = Find(listener);
+
+                int indexOfListener = lateUpdateListeners.IndexOf(listenerElement);
+
+                lateUpdateListeners.Remove(listenerElement);
+
                 if (indexOfListener <= lateUpdateListenersCurrentIndex && lateUpdateListenersCurrentIndex > 0)
                     lateUpdateListenersCurrentIndex--;
             }
@@ -82,15 +122,19 @@ namespace Paps.UnityUpdater
             if (IsSubscribedToFixedUpdate(listener))
                 return;
 
-            fixedUpdateListeners.Add(listener);
+            fixedUpdateListeners.Add(new FixedUpdateListener(listener, true));
         }
 
         public void UnsubscribeFromFixedUpdate(IFixedUpdateListener listener)
         {
-            int indexOfListener = fixedUpdateListeners.IndexOf(listener);
-
-            if (fixedUpdateListeners.Remove(listener))
+            if(ContainsListener(listener))
             {
+                var listenerElement = Find(listener);
+
+                int indexOfListener = fixedUpdateListeners.IndexOf(listenerElement);
+
+                fixedUpdateListeners.Remove(listenerElement);
+
                 if (indexOfListener <= fixedUpdateListenersCurrentIndex && fixedUpdateListenersCurrentIndex > 0)
                     fixedUpdateListenersCurrentIndex--;
             }
@@ -102,7 +146,8 @@ namespace Paps.UnityUpdater
             {
                 var listenerItem = updateListeners[updateListenersCurrentIndex];
 
-                listenerItem.DoUpdate();
+                if(listenerItem.Enabled)
+                    listenerItem.Listener.DoUpdate();
             }
 
             updateListenersCurrentIndex = 0;
@@ -114,7 +159,8 @@ namespace Paps.UnityUpdater
             {
                 var listenerItem = lateUpdateListeners[lateUpdateListenersCurrentIndex];
 
-                listenerItem.DoLateUpdate();
+                if (listenerItem.Enabled)
+                    listenerItem.Listener.DoLateUpdate();
             }
 
             lateUpdateListenersCurrentIndex = 0;
@@ -126,10 +172,107 @@ namespace Paps.UnityUpdater
             {
                 var listenerItem = fixedUpdateListeners[fixedUpdateListenersCurrentIndex];
 
-                listenerItem.DoFixedUpdate();
+                if (listenerItem.Enabled)
+                    listenerItem.Listener.DoFixedUpdate();
             }
 
             fixedUpdateListenersCurrentIndex = 0;
+        }
+
+        public void EnableUpdateListener(IUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                Find(listener).Enabled = true;
+        }
+
+        public void DisableUpdateListener(IUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                Find(listener).Enabled = false;
+        }
+
+        public void EnableLateUpdateListener(ILateUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                Find(listener).Enabled = true;
+        }
+
+        public void DisableLateUpdateListener(ILateUpdateListener listener)
+        {
+            if(ContainsListener(listener))
+                Find(listener).Enabled = false;
+        }
+
+        public void EnableFixedUpdateListener(IFixedUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                Find(listener).Enabled = true;
+        }
+
+        public void DisableFixedUpdateListener(IFixedUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                Find(listener).Enabled = false;
+        }
+
+        public bool IsEnabledForUpdate(IUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                return Find(listener).Enabled;
+            else
+                return false;
+        }
+
+        public bool IsEnabledForLateUpdate(ILateUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                return Find(listener).Enabled;
+            else
+                return false;
+        }
+
+        public bool IsEnabledForFixedUpdate(IFixedUpdateListener listener)
+        {
+            if (ContainsListener(listener))
+                return Find(listener).Enabled;
+            else
+                return false;
+        }
+
+        private class UpdateListener
+        {
+            public IUpdateListener Listener;
+            public bool Enabled;
+
+            public UpdateListener(IUpdateListener listener, bool enabled)
+            {
+                Listener = listener;
+                Enabled = enabled;
+            }
+        }
+
+        private class LateUpdateListener
+        {
+            public ILateUpdateListener Listener;
+            public bool Enabled;
+
+            public LateUpdateListener(ILateUpdateListener listener, bool enabled)
+            {
+                Listener = listener;
+                Enabled = enabled;
+            }
+        }
+
+        private class FixedUpdateListener
+        {
+            public IFixedUpdateListener Listener;
+            public bool Enabled;
+
+            public FixedUpdateListener(IFixedUpdateListener listener, bool enabled)
+            {
+                Listener = listener;
+                Enabled = enabled;
+            }
         }
     }
 

@@ -96,7 +96,7 @@ namespace Tests
         }
 
         [Test]
-        public void Execute_Update_Listeners_In_Same_Order_They_Were_Added()
+        public void Execute_Update_Listeners()
         {
             //Given
             var listener1 = Substitute.For<IUpdateListener>();
@@ -108,15 +108,12 @@ namespace Tests
             unityUpdater.ExecuteUpdates();
 
             //Then
-            Received.InOrder(() =>
-            {
-                listener1.DoUpdate();
-                listener2.DoUpdate();
-            });
+            listener1.Received(1).DoUpdate();
+            listener2.Received(1).DoUpdate();
         }
 
         [Test]
-        public void Execute_LateUpdate_Listeners_In_Same_Order_They_Were_Added()
+        public void Execute_LateUpdate_Listeners()
         {
             //Given
             var listener1 = Substitute.For<ILateUpdateListener>();
@@ -128,15 +125,12 @@ namespace Tests
             unityUpdater.ExecuteLateUpdates();
 
             //Then
-            Received.InOrder(() =>
-            {
-                listener1.DoLateUpdate();
-                listener2.DoLateUpdate();
-            });
+            listener1.Received(1).DoLateUpdate();
+            listener2.Received(1).DoLateUpdate();
         }
 
         [Test]
-        public void Execute_FixedUpdate_Listeners_In_Same_Order_They_Were_Added()
+        public void Execute_FixedUpdate_Listeners()
         {
             //Given
             var listener1 = Substitute.For<IFixedUpdateListener>();
@@ -148,11 +142,8 @@ namespace Tests
             unityUpdater.ExecuteFixedUpdates();
 
             //Then
-            Received.InOrder(() =>
-            {
-                listener1.DoFixedUpdate();
-                listener2.DoFixedUpdate();
-            });
+            listener1.DoFixedUpdate();
+            listener2.DoFixedUpdate();
         }
 
         [Test]
@@ -476,6 +467,144 @@ namespace Tests
             listenerToRemoveDuringExecution.Received(1).DoFixedUpdate();
             listener2.Received(1).DoFixedUpdate();
             listener3.Received(1).DoFixedUpdate();
+        }
+
+        [Test]
+        public void Enable_Update_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IUpdateListener>();
+            unityUpdater.SubscribeToUpdate(listener);
+
+            //When
+            unityUpdater.EnableUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForUpdate(listener), "Is enabled");
+        }
+
+        [Test]
+        public void Enable_LateUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<ILateUpdateListener>();
+            unityUpdater.SubscribeToLateUpdate(listener);
+
+            //When
+            unityUpdater.EnableLateUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForLateUpdate(listener), "Is enabled");
+        }
+
+        [Test]
+        public void Enable_FixedUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IFixedUpdateListener>();
+            unityUpdater.SubscribeToFixedUpdate(listener);
+
+            //When
+            unityUpdater.EnableFixedUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForFixedUpdate(listener), "Is enabled");
+        }
+
+        [Test]
+        public void Disable_Update_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IUpdateListener>();
+            unityUpdater.SubscribeToUpdate(listener);
+
+            //When
+            unityUpdater.DisableUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForUpdate(listener) == false, "Is disabled");
+        }
+
+        [Test]
+        public void Disable_LateUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<ILateUpdateListener>();
+            unityUpdater.SubscribeToLateUpdate(listener);
+
+            //When
+            unityUpdater.DisableLateUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForLateUpdate(listener) == false, "Is disabled");
+        }
+
+        [Test]
+        public void Disable_FixedUpdate_Listeners()
+        {
+            //Given
+            var listener = Substitute.For<IFixedUpdateListener>();
+            unityUpdater.SubscribeToFixedUpdate(listener);
+
+            //When
+            unityUpdater.DisableFixedUpdateListener(listener);
+
+            //Then
+            Assert.That(unityUpdater.IsEnabledForFixedUpdate(listener) == false, "Is disabled");
+        }
+
+        [Test]
+        public void Execute_Only_Enabled_Update_Listeners()
+        {
+            //Given
+            var disableListener = Substitute.For<IUpdateListener>();
+            var enabledListener = Substitute.For<IUpdateListener>();
+            unityUpdater.SubscribeToUpdate(disableListener);
+            unityUpdater.SubscribeToUpdate(enabledListener);
+            unityUpdater.DisableUpdateListener(disableListener);
+
+            //When
+            unityUpdater.ExecuteUpdates();
+
+            //Then
+            disableListener.DidNotReceive().DoUpdate();
+            enabledListener.Received(1).DoUpdate();
+        }
+
+        [Test]
+        public void Execute_Only_Enabled_LateUpdate_Listeners()
+        {
+            //Given
+            var disableListener = Substitute.For<ILateUpdateListener>();
+            var enabledListener = Substitute.For<ILateUpdateListener>();
+            unityUpdater.SubscribeToLateUpdate(disableListener);
+            unityUpdater.SubscribeToLateUpdate(enabledListener);
+            unityUpdater.DisableLateUpdateListener(disableListener);
+
+            //When
+            unityUpdater.ExecuteLateUpdates();
+
+            //Then
+            disableListener.DidNotReceive().DoLateUpdate();
+            enabledListener.Received(1).DoLateUpdate();
+        }
+
+        [Test]
+        public void Execute_Only_Enabled_FixedUpdate_Listeners()
+        {
+            //Given
+            var disableListener = Substitute.For<IFixedUpdateListener>();
+            var enabledListener = Substitute.For<IFixedUpdateListener>();
+            unityUpdater.SubscribeToFixedUpdate(disableListener);
+            unityUpdater.SubscribeToFixedUpdate(enabledListener);
+            unityUpdater.DisableFixedUpdateListener(disableListener);
+
+            //When
+            unityUpdater.ExecuteFixedUpdates();
+
+            //Then
+            disableListener.DidNotReceive().DoFixedUpdate();
+            enabledListener.Received(1).DoFixedUpdate();
         }
     }
 }
