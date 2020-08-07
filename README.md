@@ -120,6 +120,10 @@ class MyFixedUpdatableClass : IFixedUpdateListener
 }
 ```
 
+## Anything else I should know?
+
+- Execution order is not guaranteed
+
 ## License
 
 [MIT License](https://github.com/Sammmte/Paps-UnityUpdater/blob/master/Paps-UnityUpdater/Assets/Updater/LICENSE.md)
