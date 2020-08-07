@@ -1,8 +1,8 @@
 {
   "name": "paps.unity-updater",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "displayName": "Paps Unity Updater",
-  "unity": "2019.2",
+  "unity": "2019.4",
   "description": "UnityUpdater is a way to optimize unity's update methods, using a unique central update method",
   "license": "MIT License",
   "keywords": [
